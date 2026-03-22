@@ -1,8 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(
-  'https://cbfyrlmaehjdczcdmzfz.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNiZnlybG1hZWhqZGN6Y2RtemZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxOTAwMjUsImV4cCI6MjA4OTc2NjAyNX0.8T0C_G51Ffmq3hdXYedoxZ6aRbkrzujcOZrTC1vyJfU'
+  process.env.VITE_SUPABASE_URL,
+  process.env.VITE_SUPABASE_ANON_KEY
 );
 
 const today = new Date().toISOString().slice(0, 10);
