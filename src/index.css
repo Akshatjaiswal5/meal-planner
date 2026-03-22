@@ -267,7 +267,7 @@ body {
 @media (max-width: 640px) {
   .main-content {
     margin-left: 0;
-    padding: 24px 16px 72px; /* bottom padding clears the tab bar */
+    padding: 24px 16px calc(72px + env(safe-area-inset-bottom)); /* bottom padding clears the tab bar */
     min-height: 100vh;
   }
 
