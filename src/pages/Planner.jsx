@@ -33,12 +33,8 @@ export default function Planner() {
   }
 
   function pickRecipe(recipeId) {
-    if (!pickerState) return;
-    if (recipeId === null) {
-      clearMeal(pickerState.date, pickerState.slot);
-    } else {
-      setMeal(pickerState.date, pickerState.slot, recipeId);
-    }
+    if (!pickerState || recipeId === null) { setPickerState(null); return; }
+    setMeal(pickerState.date, pickerState.slot, recipeId);
     setPickerState(null);
   }
 
@@ -77,21 +73,29 @@ export default function Planner() {
                 {warnings.length > 0 && <span className="warn-badge" title="Missing ingredients">⚠️</span>}
               </div>
               {SLOTS.map(slot => {
-                const recipeId = slots[slot];
-                const recipe = recipes.find(r => r.id === recipeId);
+                const entries = slots[slot] || [];
                 const hasWarn = warnings.some(w => w.slot === slot);
+                const canAdd = entries.length < 3;
 
                 return (
                   <div
                     key={slot}
                     className={`slot-cell ${hasWarn ? 'slot-cell--warn' : ''}`}
-                    onClick={() => openPicker(date, slot)}
                   >
                     <span className="slot-label">{capitalize(slot)}</span>
-                    {recipe ? (
-                      <span className="slot-recipe">{recipe.name}</span>
-                    ) : (
-                      <span className="slot-empty">+ Add</span>
+                    {entries.map(({ rowId, recipeId }) => {
+                      const recipe = recipes.find(r => r.id === recipeId);
+                      return (
+                        <div key={rowId} className="slot-recipe-row">
+                          <span className="slot-recipe">{recipe?.name}</span>
+                          <button className="slot-remove-btn" onClick={() => clearMeal(date, slot, rowId)} title="Remove">×</button>
+                        </div>
+                      );
+                    })}
+                    {canAdd && (
+                      <button className="slot-add-btn" onClick={() => openPicker(date, slot)}>
+                        + Add
+                      </button>
                     )}
                   </div>
                 );
@@ -107,10 +111,13 @@ export default function Planner() {
           recipes={recipes}
           date={pickerState.date}
           slot={pickerState.slot}
-          current={mealPlan[pickerState.date]?.[pickerState.slot]}
+          selectedIds={(mealPlan[pickerState.date]?.[pickerState.slot] || []).map(e => e.recipeId)}
           onPick={pickRecipe}
           onClose={() => setPickerState(null)}
-          onSuggest={(mode) => suggestRecipe(Object.values(mealPlan[pickerState.date] || {}), pickerState.slot, mode)}
+          onSuggest={(mode) => suggestRecipe(
+            Object.values(mealPlan[pickerState.date] || {}).flatMap(entries => entries.map(e => e.recipeId)),
+            pickerState.slot, mode
+          )}
         />
       )}
     </div>
@@ -122,7 +129,7 @@ const SLOT_TYPE_MAP = { breakfast: ['breakfast', 'any'], lunch: ['lite', 'any'],
 // suggestion state: { recipe, tried, mode }
 const EMPTY_SUG = { recipe: null, tried: false, mode: null };
 
-function RecipePicker({ recipes, date, slot, current, onPick, onClose, onSuggest }) {
+function RecipePicker({ recipes, date, slot, selectedIds = [], onPick, onClose, onSuggest }) {
   const [search, setSearch] = useState('');
   const [sug, setSug] = useState(EMPTY_SUG);
   const [showAll, setShowAll] = useState(false);
@@ -184,11 +191,6 @@ function RecipePicker({ recipes, date, slot, current, onPick, onClose, onSuggest
           </button>
         </div>
         <ul className="picker-list">
-          {current && (
-            <li className="picker-item picker-item--clear" onClick={() => onPick(null)}>
-              Remove meal
-            </li>
-          )}
           {filtered.length === 0 && (
             <li className="picker-empty">
               {recipes.length === 0 ? 'No recipes yet. Add some in the Recipes tab.' : 'No matching recipes for this slot.'}
@@ -196,16 +198,18 @@ function RecipePicker({ recipes, date, slot, current, onPick, onClose, onSuggest
           )}
           {filtered.map(r => {
             const mt = MEAL_TYPES.find(m => m.id === r.mealType);
+            const isSelected = selectedIds.includes(r.id);
             return (
               <li
                 key={r.id}
-                className={`picker-item ${r.id === current ? 'picker-item--active' : ''}`}
-                onClick={() => onPick(r.id)}
+                className={`picker-item ${isSelected ? 'picker-item--active' : ''}`}
+                onClick={() => !isSelected && onPick(r.id)}
+                style={isSelected ? { opacity: 0.5, cursor: 'default' } : {}}
               >
                 <span>{r.name}</span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                   {mt && <span className="picker-type-badge" style={{ color: mt.color, background: mt.bg }}>{mt.icon} {mt.label}</span>}
-                  {r.id === current && <span className="picker-check">✓</span>}
+                  {isSelected && <span className="picker-check">✓</span>}
                 </div>
               </li>
             );

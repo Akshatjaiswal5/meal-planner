@@ -19,7 +19,7 @@ export default function Today() {
   const [suggestions, setSuggestions] = useState({});
 
   function getSuggestion(slot, mode) {
-    const usedToday = Object.values(slots).filter(Boolean);
+    const usedToday = Object.values(slots).flatMap(entries => entries.map(e => e.recipeId));
     const alreadySuggested = Object.values(suggestions).map(s => s?.recipe?.id).filter(Boolean);
     const recipe = suggestRecipe([...usedToday, ...alreadySuggested], slot, mode);
     setSuggestions(prev => ({ ...prev, [slot]: { recipe, tried: true, mode } }));
@@ -67,19 +67,26 @@ export default function Today() {
 
       <div className="meals-grid">
         {SLOTS.map(slot => {
-          const recipeId = slots[slot];
-          const recipe = recipes.find(r => r.id === recipeId);
+          const entries = slots[slot] || [];
           const slotWarnings = warnings.filter(w => w.slot === slot);
           const sug = suggestions[slot] || EMPTY_SUGGESTION;
 
           return (
-            <div key={slot} className={`meal-card ${!recipe ? 'meal-card--empty' : ''} ${slotWarnings.length > 0 ? 'meal-card--warn' : ''}`}>
+            <div key={slot} className={`meal-card ${entries.length === 0 ? 'meal-card--empty' : ''} ${slotWarnings.length > 0 ? 'meal-card--warn' : ''}`}>
               <div className="meal-slot-label">{capitalize(slot)}</div>
 
-              {recipe ? (
+              {entries.length > 0 ? (
                 <>
-                  <div className="meal-name">{recipe.name}</div>
-                  {slotWarnings.length > 0 && <div className="meal-warn-badge">Missing ingredients</div>}
+                  {entries.map(({ rowId, recipeId }) => {
+                    const r = recipes.find(x => x.id === recipeId);
+                    const hasWarn = slotWarnings.some(w => w.recipeName === r?.name);
+                    return (
+                      <div key={rowId} className="meal-name">
+                        {r?.name}
+                        {hasWarn && <span className="meal-warn-badge"> · Missing ingredients</span>}
+                      </div>
+                    );
+                  })}
                 </>
               ) : (
                 <div className="meal-empty-text">
@@ -88,7 +95,7 @@ export default function Today() {
                 </div>
               )}
 
-              {!recipe && (
+              {entries.length < 3 && (
                 <div className="suggestion-area">
                   {/* Suggestion result */}
                   {sug.tried && sug.recipe && (
@@ -129,7 +136,7 @@ export default function Today() {
         })}
       </div>
 
-      {SLOTS.every(s => slots[s]) && warnings.length === 0 && (
+      {SLOTS.every(s => (slots[s] || []).length > 0) && warnings.length === 0 && (
         <div className="all-planned">✓ All meals planned for today</div>
       )}
     </div>

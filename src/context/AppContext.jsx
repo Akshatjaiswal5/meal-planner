@@ -27,11 +27,13 @@ function toIngredient(row) {
   };
 }
 
+// mealPlan[date][slot] = [{ rowId, recipeId }, ...]  (max 3)
 function buildPlanMap(rows) {
   const map = {};
   for (const row of rows) {
     if (!map[row.date]) map[row.date] = {};
-    map[row.date][row.slot] = row.recipe_id;
+    if (!map[row.date][row.slot]) map[row.date][row.slot] = [];
+    if (row.recipe_id) map[row.date][row.slot].push({ rowId: row.id, recipeId: row.recipe_id });
   }
   return map;
 }
@@ -134,7 +136,10 @@ export function AppProvider({ children }) {
     setMealPlan(mp => {
       const next = {};
       for (const [date, slots] of Object.entries(mp)) {
-        next[date] = Object.fromEntries(Object.entries(slots).filter(([, rid]) => rid !== id));
+        next[date] = {};
+        for (const [slot, entries] of Object.entries(slots)) {
+          next[date][slot] = entries.filter(e => e.recipeId !== id);
+        }
       }
       return next;
     });
@@ -200,24 +205,33 @@ export function AppProvider({ children }) {
 
   // ── Meal Plan ─────────────────────────────────────────────
   async function setMeal(date, slot, recipeId) {
-    const { error } = await supabase
+    const existing = mealPlan[date]?.[slot] || [];
+    if (existing.length >= 3) return; // max 3 per slot
+    if (existing.some(e => e.recipeId === recipeId)) return; // no duplicates
+    const { data, error } = await supabase
       .from('meal_plan')
-      .upsert({ date, slot, recipe_id: recipeId }, { onConflict: 'date,slot' });
+      .insert({ date, slot, recipe_id: recipeId })
+      .select().single();
     if (error) { console.error(error); return; }
     setMealPlan(mp => ({
       ...mp,
-      [date]: { ...(mp[date] || {}), [slot]: recipeId },
+      [date]: {
+        ...(mp[date] || {}),
+        [slot]: [...(mp[date]?.[slot] || []), { rowId: data.id, recipeId }],
+      },
     }));
   }
 
-  async function clearMeal(date, slot) {
-    const { error } = await supabase.from('meal_plan').delete().eq('date', date).eq('slot', slot);
+  async function clearMeal(date, slot, rowId) {
+    const { error } = await supabase.from('meal_plan').delete().eq('id', rowId);
     if (error) { console.error(error); return; }
-    setMealPlan(mp => {
-      const daySlots = { ...(mp[date] || {}) };
-      delete daySlots[slot];
-      return { ...mp, [date]: daySlots };
-    });
+    setMealPlan(mp => ({
+      ...mp,
+      [date]: {
+        ...(mp[date] || {}),
+        [slot]: (mp[date]?.[slot] || []).filter(e => e.rowId !== rowId),
+      },
+    }));
   }
 
   // ── Derived helpers ───────────────────────────────────────
@@ -232,11 +246,13 @@ export function AppProvider({ children }) {
   function getDayWarnings(dateStr) {
     const slots = mealPlan[dateStr] || {};
     const warnings = [];
-    for (const [slot, recipeId] of Object.entries(slots)) {
-      const missing = getMissingIngredients(recipeId);
-      if (missing.length > 0) {
-        const recipe = recipes.find(r => r.id === recipeId);
-        warnings.push({ slot, recipeName: recipe?.name, missing });
+    for (const [slot, entries] of Object.entries(slots)) {
+      for (const { recipeId } of (entries || [])) {
+        const missing = getMissingIngredients(recipeId);
+        if (missing.length > 0) {
+          const recipe = recipes.find(r => r.id === recipeId);
+          warnings.push({ slot, recipeName: recipe?.name, missing });
+        }
       }
     }
     return warnings;
@@ -251,7 +267,9 @@ export function AppProvider({ children }) {
       const d = new Date(dateStr + 'T00:00:00');
       const daysAgo = (today - d) / (1000 * 60 * 60 * 24);
       if (daysAgo >= 0 && daysAgo <= 14) {
-        Object.values(slots).forEach(id => recentlyUsed.add(id));
+        Object.values(slots).forEach(entries =>
+          entries.forEach(e => recentlyUsed.add(e.recipeId))
+        );
       }
     }
 

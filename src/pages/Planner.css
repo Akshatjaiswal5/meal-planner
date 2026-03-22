@@ -150,8 +150,41 @@
   letter-spacing: 0.06em;
   color: var(--label3);
 }
+
+.slot-recipe-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 4px;
+}
 .slot-recipe { font-size: 13px; font-weight: 500; color: var(--label); line-height: 1.3; }
-.slot-empty { font-size: 12px; color: var(--label3); }
+
+.slot-remove-btn {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--label3);
+  font-size: 14px;
+  line-height: 1;
+  padding: 0 2px;
+  transition: color 0.1s;
+}
+.slot-remove-btn:hover { color: var(--red); }
+
+.slot-add-btn {
+  display: inline-block;
+  margin-top: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12px;
+  color: var(--blue);
+  padding: 0;
+  transition: opacity 0.1s;
+}
+.slot-add-btn:hover { opacity: 0.7; }
 
 /* Picker modal */
 .picker-overlay {
