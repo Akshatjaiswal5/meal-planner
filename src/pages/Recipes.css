@@ -1,0 +1,152 @@
+.recipes-page { max-width: 680px; }
+
+/* Type tabs */
+.meal-type-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 16px;
+}
+.mtype-tab--possible.active { background: var(--green); color: #fff; }
+.mtype-tab {
+  display: flex; align-items: center; gap: 5px;
+  padding: 6px 14px;
+  border: none; border-radius: 20px;
+  background: var(--surface);
+  font-family: inherit; font-size: 14px; font-weight: 500;
+  cursor: pointer; color: var(--label);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  transition: all 0.15s;
+}
+.mtype-tab.active { background: var(--blue); color: #fff; }
+.mtype-count {
+  font-size: 12px; font-weight: 600;
+  background: rgba(0,0,0,0.08);
+  border-radius: 10px; padding: 0 6px;
+}
+.mtype-tab.active .mtype-count { background: rgba(255,255,255,0.25); }
+
+/* Search */
+.search-bar input {
+  width: 100%;
+  padding: 10px 14px;
+  border: none; border-radius: var(--radius);
+  background: var(--surface);
+  font-family: inherit; font-size: 16px; color: var(--label);
+  outline: none;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  -webkit-appearance: none;
+}
+
+/* Type selector in modal */
+.meal-type-selector { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 4px; }
+.mtype-btn {
+  flex: 1; min-width: 80px;
+  padding: 8px 10px;
+  border: none; border-radius: var(--radius-sm);
+  background: var(--bg);
+  font-family: inherit; font-size: 14px; font-weight: 500;
+  cursor: pointer; color: var(--label2);
+  transition: all 0.15s;
+}
+.mtype-btn.active { background: var(--blue); color: #fff; font-weight: 600; }
+
+/* Recipe group */
+.recipe-group { margin-bottom: 24px; }
+.recipe-group-header {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; font-weight: 600;
+  color: var(--label2);
+  margin-bottom: 0;
+  padding: 8px 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.recipe-group-count { font-size: 13px; font-weight: 400; color: var(--label3); margin-left: auto; }
+
+/* Recipe list — iOS grouped table style */
+.recipe-list {
+  list-style: none;
+  background: var(--surface);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+.recipe-item {
+  padding: 12px 16px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  border-bottom: 1px solid var(--separator);
+  background: var(--surface);
+  transition: background 0.1s;
+}
+.recipe-item:last-child { border-bottom: none; }
+.recipe-item:hover { background: var(--bg); }
+
+.recipe-item-main { display: flex; flex-direction: column; gap: 3px; }
+.recipe-name-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.recipe-name { font-size: 17px; font-weight: 500; color: var(--label); }
+
+.recipe-type-badge {
+  font-size: 11px; padding: 2px 7px; border-radius: 5px; font-weight: 600;
+}
+.recipe-meta { display: flex; align-items: center; gap: 8px; }
+.ingredient-count { font-size: 13px; color: var(--label2); }
+.unavail-badge {
+  font-size: 12px; color: var(--orange);
+  background: var(--orange-lt); padding: 1px 7px; border-radius: 5px;
+}
+.recipe-actions { display: flex; gap: 4px; flex-shrink: 0; }
+
+/* Ingredient picker in modal */
+.ingredient-picker-list {
+  list-style: none;
+  max-height: 200px; overflow-y: auto;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+}
+.ingredient-picker-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--separator);
+  font-size: 15px; color: var(--label);
+  transition: background 0.1s;
+}
+.ingredient-picker-item:last-child { border-bottom: none; }
+.ingredient-picker-item:hover { background: var(--surface); }
+
+.checkbox {
+  width: 22px; height: 22px;
+  border: 2px solid var(--separator);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; color: transparent; flex-shrink: 0;
+  transition: all 0.15s;
+}
+.checkbox.checked {
+  background: var(--blue); border-color: var(--blue); color: #fff;
+}
+
+.ing-name { flex: 1; }
+.ing-unavail {
+  font-size: 12px; color: var(--red);
+  background: var(--red-lt); padding: 1px 7px; border-radius: 5px;
+}
+
+.ing-selected-count {
+  margin-left: 8px;
+  font-size: 12px; font-weight: 600;
+  color: var(--blue);
+  background: var(--blue-lt);
+  padding: 1px 7px; border-radius: 5px;
+}
+
+.ing-picker-search {
+  margin-bottom: 6px;
+}
+
+@media (max-width: 640px) {
+  .recipe-item { flex-wrap: wrap; gap: 8px; }
+  .recipe-actions { width: 100%; justify-content: flex-end; }
+}

@@ -1,0 +1,119 @@
+/* ── Sidebar (desktop) ─────────────────────────────────────── */
+.navbar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 220px;
+  background: var(--surface);
+  border-right: 1px solid var(--separator);
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  z-index: 100;
+}
+
+.navbar-brand {
+  color: var(--label2);
+  padding: 20px 16px 10px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.navbar-links {
+  list-style: none;
+  padding: 4px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.navbar-links a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  color: var(--label);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  font-size: 17px;
+  font-weight: 400;
+  transition: background 0.1s;
+}
+
+.navbar-links a:hover { background: var(--bg); }
+
+.navbar-links a.active {
+  background: var(--blue-lt);
+  color: var(--blue);
+  font-weight: 600;
+}
+
+.nav-icon {
+  font-size: 20px;
+  width: 28px;
+  text-align: center;
+}
+
+/* ── Bottom tab bar (mobile) ───────────────────────────────── */
+@media (max-width: 640px) {
+  .navbar {
+    top: auto;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 56px;
+    border-right: none;
+    border-top: 1px solid var(--separator);
+    flex-direction: row;
+    padding: 0;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .navbar-brand { display: none; }
+
+  .navbar-links {
+    flex-direction: row;
+    padding: 0;
+    gap: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .navbar-links li {
+    flex: 1;
+  }
+
+  .navbar-links a {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 6px 4px;
+    border-radius: 0;
+    font-size: 10px;
+    font-weight: 500;
+    height: 100%;
+  }
+
+  .navbar-links a.active {
+    background: transparent;
+    color: var(--blue);
+  }
+
+  .navbar-links a:hover { background: transparent; }
+
+  .nav-icon {
+    font-size: 22px;
+    width: auto;
+  }
+
+  .nav-label {
+    font-size: 10px;
+  }
+}

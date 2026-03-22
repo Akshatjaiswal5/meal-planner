@@ -1,0 +1,183 @@
+.pantry-page { max-width: 900px; }
+
+/* Status chips */
+.status-bar { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 16px; }
+.status-chip {
+  display: flex; align-items: center; gap: 5px;
+  padding: 6px 14px;
+  border: none; border-radius: 20px;
+  background: var(--surface);
+  font-family: inherit; font-size: 14px; font-weight: 500;
+  cursor: pointer; color: var(--label);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  transition: all 0.15s;
+}
+.status-chip span {
+  font-size: 12px; font-weight: 700;
+  background: rgba(0,0,0,0.07);
+  border-radius: 10px; padding: 0 6px;
+}
+.status-chip.active span { background: rgba(255,255,255,0.3); }
+
+.status-chip--available.active { background: var(--green); color: #fff; }
+.status-chip--out.active { background: var(--red); color: #fff; }
+.status-chip--low.active { background: var(--orange); color: #fff; }
+.status-chip--expiring.active { background: var(--orange); color: #fff; }
+
+/* Search */
+.pantry-controls { margin-bottom: 12px; }
+.pantry-search {
+  width: 100%;
+  padding: 10px 14px;
+  border: none; border-radius: var(--radius);
+  background: var(--surface);
+  font-family: inherit; font-size: 16px; color: var(--label);
+  outline: none; box-sizing: border-box;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  -webkit-appearance: none;
+}
+
+/* Category tabs */
+.category-tabs { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 24px; }
+.cat-tab {
+  padding: 6px 14px;
+  border: none; border-radius: 20px;
+  background: var(--surface);
+  cursor: pointer;
+  font-family: inherit; font-size: 14px; font-weight: 500;
+  color: var(--label);
+  display: flex; align-items: center; gap: 5px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  transition: all 0.15s;
+}
+.cat-tab.active { background: var(--label); color: #fff; }
+.cat-count {
+  font-size: 11px; font-weight: 700;
+  background: rgba(0,0,0,0.08);
+  border-radius: 10px; padding: 0 5px;
+}
+.cat-tab.active .cat-count { background: rgba(255,255,255,0.25); }
+
+/* Groups */
+.ingredient-group { margin-bottom: 28px; }
+.group-header {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 600;
+  color: var(--label2);
+  padding: 8px 14px 6px;
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+.group-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.group-label { font-size: 13px; }
+.group-perish {
+  font-size: 11px; padding: 2px 7px; border-radius: 5px; font-weight: 600;
+}
+.group-count { font-size: 13px; color: var(--label3); font-weight: 400; margin-left: auto; }
+
+/* Cards — iOS grouped list style */
+.ingredient-cards {
+  background: var(--surface);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+}
+
+@media (max-width: 640px) {
+  .ingredient-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ingredient-card {
+  padding: 12px 14px;
+  display: flex; flex-direction: column; gap: 8px;
+  position: relative;
+  border-bottom: 1px solid var(--separator);
+  border-right: 1px solid var(--separator);
+  background: var(--surface);
+  transition: background 0.1s;
+}
+.ingredient-card:hover { background: var(--bg); }
+.ingredient-card--out { opacity: 0.55; }
+
+.ing-card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.ing-card-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.ing-card-name { font-size: 16px; font-weight: 500; color: var(--label); }
+.ing-card-qty { font-size: 13px; color: var(--label2); }
+.ing-card-badges { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex-shrink: 0; }
+
+.perish-badge { font-size: 11px; padding: 2px 6px; border-radius: 5px; font-weight: 600; white-space: nowrap; }
+.expiry-badge { font-size: 11px; padding: 2px 6px; border-radius: 5px; font-weight: 700; white-space: nowrap; }
+
+/* Stock level bar */
+.stock-level-bar { display: flex; gap: 4px; }
+.stock-bar-btn {
+  flex: 1;
+  padding: 4px 0;
+  border: none; border-radius: 6px;
+  background: var(--bg);
+  font-family: inherit; font-size: 11px; font-weight: 600;
+  cursor: pointer; color: var(--label3);
+  transition: all 0.12s;
+}
+.stock-bar-btn:hover { color: var(--label2); }
+.stock-bar-btn.active { color: #fff; }
+
+/* Edit mode */
+.ingredient-card--editing { cursor: pointer; }
+.ingredient-card--editing:hover { background: var(--bg); }
+
+.ing-delete-circle {
+  flex-shrink: 0;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: var(--red);
+  border: none;
+  color: #fff;
+  font-size: 18px; font-weight: 300; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: opacity 0.12s;
+}
+.ing-delete-circle:hover { opacity: 0.8; }
+
+/* Stock level selector in modal */
+.stock-level-selector { display: flex; gap: 6px; margin-bottom: 4px; }
+.stock-btn {
+  flex: 1; padding: 8px 0;
+  border: none; border-radius: var(--radius-sm);
+  background: var(--bg);
+  font-family: inherit; font-size: 14px; font-weight: 500;
+  cursor: pointer; color: var(--label2); transition: all 0.15s;
+}
+.stock-btn.active { color: #fff; font-weight: 700; }
+
+/* Perishability radio */
+.radio-group { display: flex; flex-direction: column; gap: 5px; margin-bottom: 4px; }
+.radio-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px;
+  background: var(--bg); border-radius: var(--radius-sm);
+  cursor: pointer; font-size: 15px; transition: background 0.12s;
+}
+.radio-item input { accent-color: var(--blue); width: 17px; height: 17px; }
+
+/* Avail toggle in modal */
+.avail-toggle { display: flex; background: var(--bg); border-radius: var(--radius-sm); overflow: hidden; margin-bottom: 4px; }
+.avail-btn {
+  flex: 1; padding: 10px;
+  border: none; background: transparent;
+  cursor: pointer; font-family: inherit; font-size: 15px; font-weight: 500;
+  color: var(--label2); transition: all 0.15s;
+}
+.avail-btn.in-stock { background: var(--green-lt); color: #1A7A37; font-weight: 600; }
+.avail-btn.out-stock { background: var(--red-lt); color: var(--red); font-weight: 600; }
+
+/* Legacy */
+.pantry-alert {
+  background: var(--orange-lt); border-radius: var(--radius); padding: 10px 16px;
+  margin-bottom: 16px; display: flex; align-items: center; gap: 12px;
+  font-size: 14px; color: var(--orange);
+}
