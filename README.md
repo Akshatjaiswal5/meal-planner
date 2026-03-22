@@ -1,16 +1,23 @@
-# React + Vite
+# Meal Planner
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A personal meal planning app built with React and Supabase.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Today** — see what's planned for breakfast, lunch and dinner with ingredient warnings
+- **Planner** — weekly and next-day meal planning grid
+- **Recipes** — manage recipes with ingredient lists, meal type classification (Breakfast / Lite / Dinner), and a "possible" filter showing only recipes you can make right now
+- **Pantry** — track kitchen ingredients with stock levels, auto-expiry, and category grouping
 
-## React Compiler
+## Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React + Vite
+- Supabase (Postgres)
+- Deployable to Netlify
 
-## Expanding the ESLint configuration
+## Setup
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. Clone the repo
+2. Copy `.env.example` to `.env` and fill in your Supabase URL and anon key
+3. Run the SQL in `supabase-schema.sql` and `supabase-migration.sql` in your Supabase project
+4. `npm install && npm run dev`
