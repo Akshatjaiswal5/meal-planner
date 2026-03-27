@@ -7,4 +7,6 @@ if (!url || !key) {
   console.error('Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY in environment variables.');
 }
 
-export const supabase = createClient(url, key);
+export const supabase = createClient(url, key, {
+  db: { schema: 'meal_planner' },
+});
